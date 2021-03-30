@@ -13,7 +13,7 @@ class ExpressServer {
         this.basePathUser = `${config.api.prefix}/users`
 
         this._middlewares();
-        
+
         this._swaggerConfig();
 
         this._routes();
@@ -48,7 +48,10 @@ class ExpressServer {
     _errorHandler() {
         this.app.use((err, req, res, next) => {
             const code = err.code || 500;
-            res.status(code);
+
+            logger.error(`${code} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+            logger.error(err.stack);
+
             const body = {
                 error: {
                     code,
